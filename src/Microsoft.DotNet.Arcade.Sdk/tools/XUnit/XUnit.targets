@@ -5,6 +5,7 @@
     <PackageReference Include="xunit" Version="$(XUnitVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true"/>
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitRunnerVisualStudioVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true"/>
     <PackageReference Include="xunit.runner.console" Version="$(XUnitRunnerConsoleVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true"/>
+    <PackageReference Include="coverlet.console" Version="$(CoverletConsoleVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true"/>
   </ItemGroup>
 
   <!--
@@ -63,9 +64,16 @@
       <_TestRunner Condition="'$(_TestRuntime)' != 'Mono'">$(_XUnitConsoleExePath)</_TestRunner>
     </PropertyGroup>
 
-    <PropertyGroup>
-      <_TestRunnerCommand>"$(_TestRunner)" $(_TestRunnerArgs)</_TestRunnerCommand>
+    <PropertyGroup Condition="'$(CollectCoverage)' != '' AND '$(_TestRuntime)' == 'Core'">
+      <_TestCoverageArgs>"$(NuGetPackageRoot)coverlet.console/$(CoverletConsoleVersion)/tools/netcoreapp2.2/any/coverlet.console.dll" "$(_TestAssembly)" --target "$(_TestRunner)" --targetargs "$(_TestRunnerArgs)" --output "%(ArtifactsTestResultsDir)" --f opencover</_TestCoverageArgs>
+      <_TestRunnerCommand>"$(_TestRunner)" $(_TestCoverageArgs)</_TestRunnerCommand>
+    </PropertyGroup>
 
+    <PropertyGroup Condition="'$(CollectCoverage)' == '' AND '$(_TestRuntime)' != 'Core'">
+      <_TestRunnerCommand>"$(_TestRunner)" $(_TestRunnerArgs)</_TestRunnerCommand>
+    </PropertyGroup>
+
+    <PropertyGroup>
       <!-- 
         Redirect std output of the runner.
         Note that xUnit outputs failure info to both STDOUT (stack trace, message) and STDERR (failed test name) 

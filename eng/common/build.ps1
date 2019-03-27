@@ -41,6 +41,7 @@ function Print-Usage() {
     Write-Host "  -deploy                 Deploy built VSIXes"
     Write-Host "  -deployDeps             Deploy dependencies (e.g. VSIXes for integration tests)"
     Write-Host "  -test                   Run all unit tests in the solution (short: -t)"
+    Write-Host "  -coverage               Generate code coverage for all tests"
     Write-Host "  -integrationTest        Run all integration tests in the solution"
     Write-Host "  -performanceTest        Run all performance tests in the solution"
     Write-Host "  -pack                   Package build outputs into NuGet packages and Willow components"
@@ -96,6 +97,7 @@ function Build {
     /p:Rebuild=$rebuild `
     /p:Deploy=$deploy `
     /p:Test=$test `
+    /p:CollectCoverage=$coverage `
     /p:Pack=$pack `
     /p:IntegrationTest=$integrationTest `
     /p:PerformanceTest=$performanceTest `

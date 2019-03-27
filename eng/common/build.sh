@@ -21,6 +21,7 @@ usage()
   echo "  --build                    Build solution (short: -b)"
   echo "  --rebuild                  Rebuild solution"
   echo "  --test                     Run all unit tests in the solution (short: -t)"
+  echo "  --coverage                  Generate code coverage for all tests"
   echo "  --integrationTest          Run all integration tests in the solution"
   echo "  --performanceTest          Run all performance tests in the solution"
   echo "  --pack                     Package build outputs into NuGet packages and Willow components"
@@ -55,6 +56,7 @@ restore=false
 build=false
 rebuild=false
 test=false
+coverage=false
 integration_test=false
 performance_test=false
 pack=false
@@ -106,6 +108,9 @@ while [[ $# > 0 ]]; do
       ;;
     -test|-t)
       test=true
+      ;;
+    -coverage)
+      coverage=true
       ;;
     -integrationtest)
       integration_test=true
@@ -195,6 +200,7 @@ function Build {
     /p:Build=$build \
     /p:Rebuild=$rebuild \
     /p:Test=$test \
+    /p:CollectCoverage=$coverage \
     /p:Pack=$pack \
     /p:IntegrationTest=$integration_test \
     /p:PerformanceTest=$performance_test \
